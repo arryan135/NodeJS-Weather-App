@@ -1,3 +1,6 @@
+const geocode = require("./utils/geocode")
+const forecast = require("./utils/forecast")
+
 const path = require("path");
 const express = require("express");
 const hbs = require("hbs")
@@ -20,14 +23,14 @@ server.use(express.static(publicDirectoryPath));
 server.get("", (req, res) => {
     res.render("index", {
         title: "Weather",
-        name: "Arryan Malikk"
+        name: "Arryan Malik"
     });
 });
 
 server.get("/about", (req, res) => {
     res.render("about", {
         title: "About Me",
-        name: "Arryan Malikk"
+        name: "Arryan Malik"
     });
 });
 
@@ -35,21 +38,34 @@ server.get("/help", (req, res) => {
     res.render("help", {
         message: "This is a helpful message",
         title: "Help",
-        name: "Arryan Malikk"
+        name: "Arryan Malik"
     })
 });
 
 server.get("/weather", (req, res) => {
-    res.send({
-        forecast: "It is snowing",
-        location: "Philadelphia"
+    if (!req.query.address){
+        return res.send({
+            error: "You must provide the address query"
+        });
+    }
+    const {address} = req.query;
+    geocode(address, (error, {latitude, longitude, location} = {}) => {
+        if (error) { return res.send({error}); }
+        forecast(latitude, longitude, (error, forecastData) => {
+            if (error) { return res.send({error}); }
+            res.send({
+                address,
+                location,
+                forecast: forecastData
+            });
+        });
     });
 });
 
 server.get("/help/*", (req, res) => {
     res.render("404", {
         title: "404",
-        name: "Arryan Malikk",
+        name: "Arryan Malik",
         errorMsg: "Help article not found"
     });
 })
@@ -57,7 +73,7 @@ server.get("/help/*", (req, res) => {
 server.get("*", (req, res) => {
     res.render("404", {
         title: "404",
-        name: "Arryan Malikk",
+        name: "Arryan Malik",
         errorMsg: "Page not found."
     });
 });
