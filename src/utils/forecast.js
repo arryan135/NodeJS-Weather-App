@@ -10,8 +10,8 @@ const forecast = (lat, long, callback) => {
             callback("Unable to find location.", undefined);
         } else{
             const dataJS = JSON.parse(body);
-            const {temperature, feelslike, weather_descriptions} = dataJS.current;
-            callback(undefined, `${weather_descriptions[0]}. It is currently ${temperature} degrees out. It feels like ${feelslike} degrees out.`)
+            const {temperature, feelslike, weather_descriptions, humidity} = dataJS.current;
+            callback(undefined, `${weather_descriptions[0]}. It is currently ${temperature} degrees out. It feels like ${feelslike} degrees out. The humidity is ${humidity}%.`)
         }
     })
 }
