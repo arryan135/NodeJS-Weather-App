@@ -39,7 +39,7 @@ server.get("/about", (req, res) => {
 
 server.get("/help", (req, res) => {
     res.render("help", {
-        message: "This is a helpful message",
+        message: "Questions about this application? Please email me at arryan@umich.edu",
         title: "Help",
         name: "Arryan Malik"
     })
